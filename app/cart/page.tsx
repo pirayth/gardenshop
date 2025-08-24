@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Trash2, Plus, Minus } from "lucide-react"
+import { Trash2, Plus, Minus, X } from "lucide-react"
 
 interface CartItem {
   id: string
@@ -16,13 +16,22 @@ interface CartItem {
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [showCryptoModal, setShowCryptoModal] = useState(false)
+
+  const cryptoAddresses: Record<string, string> = {
+    LTC: "ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d",
+    SOL: "ERxdWGfi8WYSHBFyirFSKzreSHYz7NtgC5QH7SoF9xhM",
+    "USDT (BEP20)": "0x046d9b1482Ad0910D90983D079ed59833d7f8ceF",
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    alert("Copied to clipboard!")
+  }
 
   useEffect(() => {
-    // Load cart from localStorage
     const savedCart = localStorage.getItem("roblox-garden-cart")
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart))
-    }
+    if (savedCart) setCartItems(JSON.parse(savedCart))
   }, [])
 
   const updateCart = (newItems: CartItem[]) => {
@@ -44,13 +53,8 @@ export default function CartPage() {
     updateCart(newItems)
   }
 
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-  }
-
-  const clearCart = () => {
-    updateCart([])
-  }
+  const getTotalPrice = () => cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+  const clearCart = () => updateCart([])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -137,7 +141,7 @@ export default function CartPage() {
 
               {/* Cart Summary */}
               <Card className="bg-gray-800 border-gray-700">
-                <CardContent className="p-6">
+                <CardContent className="p-6 space-y-4">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-white">Total</h2>
                     <div className="text-3xl font-bold text-pink-400 drop-shadow-[0_0_15px_rgba(244,114,182,0.5)]">
@@ -145,60 +149,92 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    {/* Stripe Checkout Button - Ready for integration */}
-                    <div className="space-y-4 text-white">
-                      <div className="space-y-6 text-white">
-                        {/* Payment Info */}
-                        <div className="space-y-2">
-                          <h3 className="text-lg font-semibold">💳 Payment Information</h3>
-                          <p>
-                            <span className="font-medium">LTC Crypto Address:</span> 
-                            <span className="ml-2 break-all text-pink-400">ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d</span>
-                          </p>
-                          <p>
-                            <span className="font-medium">PayPal Email:</span> 
-                            <span className="ml-2 text-pink-400">pirasalesonline@gmail.com</span>
-                          </p>
-                          <p>
-                            <span className="font-medium">Order Form:</span> Please submit your order using the form below ONLY after completing payment.
-                          </p>
-                        </div>
+                  {/* Payment Info Button */}
+                  <Button
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg"
+                    onClick={() => setShowCryptoModal(true)}
+                  >
+                    Show Crypto / PayPal Options
+                  </Button>
 
-                        {/* Submit Button */}
-                        <Button
-                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg"
-                          onClick={() => {
-                            window.open(
-                              "https://docs.google.com/forms/d/e/1FAIpQLSdXUPwM9kvrXpVO8W49jvoqlOfVfhCS6GnY6xspJjWn67xFsA/viewform",
-                              "_blank"
-                            )
-                          }}
-                        >
-                          Submit Your Order 📝
-                        </Button>
-                      </div> {/* <-- Fixed missing closing div */}
+                  {/* Submit Order Button */}
+                  <Button
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg"
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/e/1FAIpQLSdXUPwM9kvrXpVO8W49jvoqlOfVfhCS6GnY6xspJjWn67xFsA/viewform",
+                        "_blank"
+                      )
+                    }}
+                  >
+                    Submit Your Order 📝
+                  </Button>
 
-                      <div className="flex space-x-4">
-                        <Button
-                          variant="outline"
-                          onClick={clearCart}
-                          className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
-                        >
-                          Clear Cart
-                        </Button>
-                        <Button
-                          variant="outline"
-                          asChild
-                          className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
-                        >
-                          <a href="/">Continue Shopping</a>
-                        </Button>
-                      </div>
-                    </div>
+                  <div className="flex space-x-4">
+                    <Button
+                      variant="outline"
+                      onClick={clearCart}
+                      className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
+                    >
+                      Clear Cart
+                    </Button>
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
+                    >
+                      <a href="/">Continue Shopping</a>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+
+          {/* Crypto / PayPal Modal */}
+          {showCryptoModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+              <div className="bg-gray-800 p-6 rounded-lg max-w-sm w-full space-y-4 relative">
+                <Button
+                  className="absolute top-2 right-2 p-2 text-white hover:bg-gray-700 rounded-full"
+                  onClick={() => setShowCryptoModal(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+                <h4 className="text-lg font-semibold text-white">💰 Payment Options</h4>
+
+                {/* Crypto Addresses */}
+                {Object.entries(cryptoAddresses).map(([coin, addr]) => (
+                  <div key={coin} className="flex justify-between items-center bg-gray-700 p-2 rounded">
+                    <span>{coin}</span>
+                    <div className="flex space-x-2">
+                      <span className="break-all">{addr}</span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard(addr)}
+                      >
+                        Copy
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* PayPal URL */}
+                <div className="flex justify-between items-center bg-gray-700 p-2 rounded">
+                  <span>PayPal</span>
+                  <div className="flex space-x-2">
+                    <span className="break-all">https://www.paypal.com/paypalme/pirasales</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => copyToClipboard("https://www.paypal.com/paypalme/pirasales")}
+                    >
+                      Copy
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

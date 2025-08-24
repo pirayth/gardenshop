@@ -48,7 +48,7 @@ export default function Home() {
           transition={{ duration: 3, repeat: Infinity, repeatType: "mirror" }}
           className="text-6xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-teal-300 bg-clip-text text-transparent"
         >
-          Grow Your World
+          Grow Your Garden
         </motion.h1>
 
         <p className="max-w-2xl text-gray-300 text-lg mb-10">

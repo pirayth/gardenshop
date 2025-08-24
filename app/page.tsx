@@ -1,7 +1,17 @@
+"use client"; // <- This is required for Framer Motion
+
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  // Get window size safely (only runs on client)
+  useEffect(() => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  }, []);
+
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white overflow-hidden">
       {/* Floating Shapes */}
@@ -10,8 +20,8 @@ export default function Home() {
           key={i}
           className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 opacity-50 blur-sm"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           animate={{
             y: ["-5%", "105%"],

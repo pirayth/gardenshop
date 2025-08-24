@@ -149,6 +149,11 @@ export default function CartPage() {
                     </div>
                   </div>
 
+                  {/* Payment Notice */}
+                  <p className="text-sm text-yellow-400 font-semibold mb-2">
+                    **Only make an order notice after completing payment**
+                  </p>
+
                   {/* Payment Info Button */}
                   <Button
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg"
@@ -167,7 +172,7 @@ export default function CartPage() {
                       )
                     }}
                   >
-                    Submit Your Order 📝
+                    Order Notice 📝
                   </Button>
 
                   <div className="flex space-x-4">

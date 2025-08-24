@@ -85,6 +85,23 @@ export default function Home() {
               </motion.button>
             </a>
           </Link>
+
+          {/* Support Button */}
+          <motion.button
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0px 0px 15px rgba(255,215,0,0.6)",
+            }}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-7 rounded-xl text-lg shadow-lg"
+            onClick={() =>
+              window.open(
+                "https://docs.google.com/forms/d/e/1FAIpQLSc3nFgA9thz7XOGSZgf98CnN8B7srG1ds2aherVklQEwGFhHg/viewform?usp=dialog",
+                "_blank"
+              )
+            }
+          >
+            🛠 Support
+          </motion.button>
         </div>
 
         {/* Feature Badges */}

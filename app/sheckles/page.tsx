@@ -32,47 +32,18 @@ export default function ShecklesPage() {
     }
 
     updateCartCount()
-
     window.addEventListener("storage", updateCartCount)
     return () => window.removeEventListener("storage", updateCartCount)
   }, [])
 
   const shecklePackages = [
-    {
-      amount: "13Sx Sheckles",
-      price: "$2.00",
-      discount: "20%",
-    },
-    {
-      amount: "33Sx Sheckles",
-      price: "$5.00",
-      discount: "33%",
-    },
-    {
-      amount: "67Sx Sheckles",
-      price: "$10.00",
-      discount: "43%",
-    },
-    {
-      amount: "133Sx Sheckles",
-      price: "$20.00",
-      discount: "50%",
-    },
-    {
-      amount: "333Sx Sheckles",
-      price: "$50.00",
-      discount: "55%",
-    },
-    {
-      amount: "667Sx Sheckles",
-      price: "$100.00",
-      discount: "60%",
-    },
-    {
-      amount: "1.3SP Sheckles",
-      price: "$200.00",
-      discount: "67%",
-    },
+    { amount: "13Sx Sheckles", price: "$2.00", discount: "20%" },
+    { amount: "33Sx Sheckles", price: "$5.00", discount: "33%" },
+    { amount: "67Sx Sheckles", price: "$10.00", discount: "43%" },
+    { amount: "133Sx Sheckles", price: "$20.00", discount: "50%" },
+    { amount: "333Sx Sheckles", price: "$50.00", discount: "55%" },
+    { amount: "667Sx Sheckles", price: "$100.00", discount: "60%" },
+    { amount: "1.3SP Sheckles", price: "$200.00", discount: "67%" },
   ]
 
   const addToCart = (pack: { amount: string; price: string }) => {
@@ -96,11 +67,10 @@ export default function ShecklesPage() {
     }
 
     localStorage.setItem("roblox-garden-cart", JSON.stringify(cartItems))
-
     const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
     setCartCount(totalCount)
 
-    setPopupMessage(`${pack.amount} Sheckles added to cart!`)
+    setPopupMessage(`${pack.amount} added to cart!`)
     setShowPopup(true)
     setTimeout(() => setShowPopup(false), 3000)
   }
@@ -125,10 +95,22 @@ export default function ShecklesPage() {
             </Link>
             <Link href="/cart">
               <Button className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Cart ({cartCount})
+                <ShoppingCart className="w-4 h-4 mr-2" /> Cart ({cartCount})
               </Button>
             </Link>
+          </div>
+
+          {/* 🔹 Active tab navigation */}
+          <div className="flex space-x-4 mt-4">
+            <Link
+              href="/pets"
+              className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg shadow"
+            >
+              Pets
+            </Link>
+            <span className="bg-yellow-400 text-black px-4 py-2 rounded-lg font-semibold shadow">
+              Sheckles
+            </span>
           </div>
         </div>
       </header>
@@ -136,14 +118,14 @@ export default function ShecklesPage() {
       <section className="py-16 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Buy
+            Buy{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400">
-              {" "}
               Sheckles
             </span>
           </h1>
           <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Get premium Sheckles to unlock exclusive items, rare pets, and magical decorations for your garden paradise.
+            Get premium Sheckles to unlock exclusive items, rare pets, and magical decorations
+            for your garden paradise.
           </p>
         </div>
       </section>
@@ -182,6 +164,7 @@ export default function ShecklesPage() {
               </Card>
             ))}
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {shecklePackages.slice(4).map((pack, idx) => (
               <Card
@@ -226,7 +209,9 @@ export default function ShecklesPage() {
                 <Star className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Exclusive Items</h3>
-              <p className="text-slate-400">Access premium pets, rare seeds, and magical decorations</p>
+              <p className="text-slate-400">
+                Access premium pets, rare seeds, and magical decorations
+              </p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -240,7 +225,9 @@ export default function ShecklesPage() {
                 <Star className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">VIP Status</h3>
-              <p className="text-slate-400">Unlock special privileges and early access to new items</p>
+              <p className="text-slate-400">
+                Unlock special privileges and early access to new items
+              </p>
             </div>
           </div>
         </div>

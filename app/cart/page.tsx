@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -17,6 +15,7 @@ interface CartItem {
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [showCryptoModal, setShowCryptoModal] = useState(false)
+  const [prices, setPrices] = useState<{ [key: string]: number }>({})
 
   const cryptoAddresses: Record<string, string> = {
     LTC: "ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d",
@@ -49,25 +48,60 @@ export default function CartPage() {
       removeItem(id)
       return
     }
-    const newItems = cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item))
+    const newItems = cartItems.map((item) =>
+      item.id === id ? { ...item, quantity: newQuantity } : item
+    )
     updateCart(newItems)
   }
 
-  const getTotalPrice = () => cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+  const getTotalPrice = () =>
+    cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+
   const clearCart = () => updateCart([])
+
+  // ✅ Fetch crypto prices (live)
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const res = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=litecoin,solana,tether&vs_currencies=usd"
+        )
+        const data = await res.json()
+        setPrices({
+          LTC: data.litecoin.usd,
+          SOL: data.solana.usd,
+          "USDT (BEP20)": data.tether.usd,
+        })
+      } catch (err) {
+        console.error("Error fetching crypto prices", err)
+      }
+    }
+
+    fetchPrices()
+    const interval = setInterval(fetchPrices, 60000) // refresh every 1 min
+    return () => clearInterval(interval)
+  }, [])
+
+  const totalUSD = getTotalPrice()
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8 font-sans">🛒 Shopping Cart</h1>
+          <h1 className="text-4xl font-bold text-center mb-8 font-sans">
+            🛒 Shopping Cart
+          </h1>
 
           {cartItems.length === 0 ? (
             <Card className="bg-gray-800 border-gray-700">
               <CardContent className="p-8 text-center">
                 <div className="text-6xl mb-4">🛒</div>
-                <h2 className="text-2xl font-semibold mb-4 text-white">Your cart is empty</h2>
-                <p className="text-gray-400 mb-6">Add some pets or sheckles to get started!</p>
+                <h2 className="text-2xl font-semibold mb-4 text-white">
+                  Your cart is empty
+                </h2>
+                <p className="text-gray-400 mb-6">
+                  Add some pets or sheckles to get started!
+                </p>
                 <div className="space-x-4">
                   <Button asChild className="bg-pink-600 hover:bg-pink-700">
                     <a href="/pets">Browse Pets</a>
@@ -87,17 +121,20 @@ export default function CartPage() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-white">{item.amount ? item.amount : item.name}</h3>
+                          <h3 className="text-xl font-semibold text-white">
+                            {item.amount ? item.amount : item.name}
+                          </h3>
                           <p className="text-gray-400 capitalize">{item.type}</p>
                         </div>
-
                         <div className="flex items-center space-x-4">
                           {/* Quantity Controls */}
                           <div className="flex items-center space-x-2">
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity - 1)
+                              }
                               className="h-8 w-8 p-0 border-gray-600 hover:bg-gray-700"
                             >
                               <Minus className="h-4 w-4" />
@@ -106,7 +143,9 @@ export default function CartPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity + 1)
+                              }
                               className="h-8 w-8 p-0 border-gray-600 hover:bg-gray-700"
                             >
                               <Plus className="h-4 w-4" />
@@ -119,7 +158,9 @@ export default function CartPage() {
                               ${(item.price * item.quantity).toFixed(2)}
                             </div>
                             {item.quantity > 1 && (
-                              <div className="text-sm text-gray-400">${item.price.toFixed(2)} each</div>
+                              <div className="text-sm text-gray-400">
+                                ${item.price.toFixed(2)} each
+                              </div>
                             )}
                           </div>
 
@@ -206,39 +247,43 @@ export default function CartPage() {
                 >
                   <X className="h-4 w-4" />
                 </Button>
+
                 <h4 className="text-lg font-semibold text-white">💰 Payment Options</h4>
 
-                {/* Crypto Addresses */}
-                {Object.entries(cryptoAddresses).map(([coin, addr]) => (
-                  <div key={coin} className="flex justify-between items-center bg-gray-700 p-2 rounded">
-                    <span>{coin}</span>
-                    <div className="flex space-x-2">
-                      <span className="break-all">{addr}</span>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => copyToClipboard(addr)}
-                      >
-                        Copy
-                      </Button>
+                {/* Crypto Addresses with live USD conversion */}
+                {Object.entries(cryptoAddresses).map(([coin, addr]) => {
+                  const price = prices[coin]
+                  const amount = price ? (totalUSD / price).toFixed(6) : null
+                  return (
+                    <div key={coin} className="flex flex-col bg-gray-700 p-2 rounded space-y-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-200 font-medium">{coin}</span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-black text-black bg-white hover:bg-gray-200"
+                          onClick={() => copyToClipboard(addr)}
+                        >
+                          Copy
+                        </Button>
+                      </div>
+                      <span className="break-all text-gray-300">{addr}</span>
+                      {amount && (
+                        <span className="text-green-400 text-sm">
+                          Send: {amount} {coin} (~${totalUSD.toFixed(2)})
+                        </span>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
 
-                {/* PayPal URL */}
-                <div className="flex justify-between items-center bg-gray-700 p-2 rounded">
-                  <span>PayPal</span>
-                  <div className="flex space-x-2">
-                    <span className="break-all">https://www.paypal.com/paypalme/pirasales</span>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyToClipboard("https://www.paypal.com/paypalme/pirasales")}
-                    >
-                      Copy
-                    </Button>
-                  </div>
-                </div>
+                {/* Pay with PayPal Button */}
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-lg"
+                  onClick={() => window.open("https://www.paypal.com/paypalme/pirasales", "_blank")}
+                >
+                  Pay with PayPal
+                </Button>
               </div>
             </div>
           )}

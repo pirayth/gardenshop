@@ -51,7 +51,7 @@ export default function PetsPage() {
     setTimeout(() => setShowPopup(false), 3000)
   }
 
- const pets = [
+  const pets = [
     { name: "Ascended Pets", price: "15", originalPrice: "25", discount: 40, image: "/ascended.png", rarity: "Mythic" },
     { name: "Raccoon", price: "10", originalPrice: "20", discount: 50, image: "/raccoon.png", rarity: "Epic" },
     { name: "Disco Bee", price: "10", originalPrice: "18", discount: 44, image: "/disco.png", rarity: "Epic" },
@@ -66,10 +66,7 @@ export default function PetsPage() {
     { name: "French Fry Ferret", price: "3", originalPrice: "6", discount: 50, image: "/ferret.png", rarity: "Common" },
     { name: "Lobster", price: "3", originalPrice: "6", discount: 50, image: "/lobster.png", rarity: "Common" },
     { name: "Golden Goose", price: "4", originalPrice: "7.5", discount: 47, image: "/goose.png", rarity: "Rare" },
-];
-
-
-
+  ]
 
   // 🔎 Search + Sort logic
   const filteredPets = useMemo(() => {
@@ -114,6 +111,19 @@ export default function PetsPage() {
                 <ShoppingCart className="w-4 h-4 mr-2" /> Cart ({cartCount})
               </Link>
             </Button>
+          </div>
+
+          {/* 🔹 Active tab + quick switch to Sheckles */}
+          <div className="flex space-x-4 mt-4">
+            <span className="bg-yellow-400 text-black px-4 py-2 rounded-lg font-semibold shadow">
+              Pets
+            </span>
+            <Link
+              href="/sheckles"
+              className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg shadow"
+            >
+              Sheckles
+            </Link>
           </div>
         </div>
       </header>

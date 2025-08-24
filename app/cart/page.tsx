@@ -1,88 +1,89 @@
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Trash2, Plus, Minus, X } from "lucide-react"
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Trash2, Plus, Minus, X } from "lucide-react";
 
 interface CartItem {
-  id: string
-  name: string
-  price: number
-  quantity: number
-  type: "sheckles" | "pet"
-  amount?: string // For sheckles packages like "135x Sheckles"
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  type: "sheckles" | "pet";
+  amount?: string; // For sheckles packages like "135x Sheckles"
 }
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [showCryptoModal, setShowCryptoModal] = useState(false)
-  const [prices, setPrices] = useState<{ [key: string]: number }>({})
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [showCryptoModal, setShowCryptoModal] = useState(false);
+  const [prices, setPrices] = useState<{ [key: string]: number }>({});
 
   const cryptoAddresses: Record<string, string> = {
     LTC: "ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d",
     SOL: "ERxdWGfi8WYSHBFyirFSKzreSHYz7NtgC5QH7SoF9xhM",
     "USDT (BEP20)": "0x046d9b1482Ad0910D90983D079ed59833d7f8ceF",
-  }
+  };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-    alert("Copied to clipboard!")
-  }
+    navigator.clipboard.writeText(text);
+    alert("Copied to clipboard!");
+  };
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("roblox-garden-cart")
-    if (savedCart) setCartItems(JSON.parse(savedCart))
-  }, [])
+    const savedCart = localStorage.getItem("roblox-garden-cart");
+    if (savedCart) setCartItems(JSON.parse(savedCart));
+  }, []);
 
   const updateCart = (newItems: CartItem[]) => {
-    setCartItems(newItems)
-    localStorage.setItem("roblox-garden-cart", JSON.stringify(newItems))
-  }
+    setCartItems(newItems);
+    localStorage.setItem("roblox-garden-cart", JSON.stringify(newItems));
+  };
 
   const removeItem = (id: string) => {
-    const newItems = cartItems.filter((item) => item.id !== id)
-    updateCart(newItems)
-  }
+    const newItems = cartItems.filter((item) => item.id !== id);
+    updateCart(newItems);
+  };
 
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity <= 0) {
-      removeItem(id)
-      return
+      removeItem(id);
+      return;
     }
     const newItems = cartItems.map((item) =>
       item.id === id ? { ...item, quantity: newQuantity } : item
-    )
-    updateCart(newItems)
-  }
+    );
+    updateCart(newItems);
+  };
 
   const getTotalPrice = () =>
-    cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  const clearCart = () => updateCart([])
+  const clearCart = () => updateCart([]);
 
-  // ✅ Fetch crypto prices (live)
   useEffect(() => {
     const fetchPrices = async () => {
       try {
         const res = await fetch(
           "https://api.coingecko.com/api/v3/simple/price?ids=litecoin,solana,tether&vs_currencies=usd"
-        )
-        const data = await res.json()
+        );
+        const data = await res.json();
         setPrices({
           LTC: data.litecoin.usd,
           SOL: data.solana.usd,
           "USDT (BEP20)": data.tether.usd,
-        })
+        });
       } catch (err) {
-        console.error("Error fetching crypto prices", err)
+        console.error("Error fetching crypto prices", err);
       }
-    }
+    };
 
-    fetchPrices()
-    const interval = setInterval(fetchPrices, 60000) // refresh every 1 min
-    return () => clearInterval(interval)
-  }, [])
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const totalUSD = getTotalPrice()
+  const totalUSD = getTotalPrice();
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -127,7 +128,6 @@ export default function CartPage() {
                           <p className="text-gray-400 capitalize">{item.type}</p>
                         </div>
                         <div className="flex items-center space-x-4">
-                          {/* Quantity Controls */}
                           <div className="flex items-center space-x-2">
                             <Button
                               size="sm"
@@ -152,7 +152,6 @@ export default function CartPage() {
                             </Button>
                           </div>
 
-                          {/* Price */}
                           <div className="text-right min-w-[80px]">
                             <div className="text-2xl font-bold text-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]">
                               ${(item.price * item.quantity).toFixed(2)}
@@ -164,7 +163,6 @@ export default function CartPage() {
                             )}
                           </div>
 
-                          {/* Remove Button */}
                           <Button
                             size="sm"
                             variant="outline"
@@ -180,7 +178,6 @@ export default function CartPage() {
                 ))}
               </div>
 
-              {/* Cart Summary */}
               <Card className="bg-gray-800 border-gray-700">
                 <CardContent className="p-6 space-y-4">
                   <div className="flex justify-between items-center mb-6">
@@ -190,12 +187,10 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  {/* Payment Notice */}
                   <p className="text-sm text-yellow-400 font-semibold mb-2">
                     **Only make an order notice after completing payment**
                   </p>
 
-                  {/* Payment Info Button */}
                   <Button
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg"
                     onClick={() => setShowCryptoModal(true)}
@@ -203,14 +198,13 @@ export default function CartPage() {
                     Show Crypto / PayPal Options
                   </Button>
 
-                  {/* Submit Order Button */}
                   <Button
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg"
                     onClick={() => {
                       window.open(
                         "https://docs.google.com/forms/d/e/1FAIpQLSdXUPwM9kvrXpVO8W49jvoqlOfVfhCS6GnY6xspJjWn67xFsA/viewform",
                         "_blank"
-                      )
+                      );
                     }}
                   >
                     Order Notice 📝
@@ -237,7 +231,6 @@ export default function CartPage() {
             </div>
           )}
 
-          {/* Crypto / PayPal Modal */}
           {showCryptoModal && (
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
               <div className="bg-gray-800 p-6 rounded-lg max-w-sm w-full space-y-4 relative">
@@ -250,10 +243,9 @@ export default function CartPage() {
 
                 <h4 className="text-lg font-semibold text-white">💰 Payment Options</h4>
 
-                {/* Crypto Addresses with live USD conversion */}
                 {Object.entries(cryptoAddresses).map(([coin, addr]) => {
-                  const price = prices[coin]
-                  const amount = price ? (totalUSD / price).toFixed(6) : null
+                  const price = prices[coin];
+                  const amount = price ? (totalUSD / price).toFixed(6) : null;
                   return (
                     <div key={coin} className="flex flex-col bg-gray-700 p-2 rounded space-y-1">
                       <div className="flex justify-between items-center">
@@ -274,10 +266,9 @@ export default function CartPage() {
                         </span>
                       )}
                     </div>
-                  )
+                  );
                 })}
 
-                {/* Pay with PayPal Button */}
                 <Button
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-lg"
                   onClick={() => window.open("https://www.paypal.com/paypalme/pirasales", "_blank")}
@@ -290,5 +281,5 @@ export default function CartPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

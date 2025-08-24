@@ -6,10 +6,25 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const [sales, setSales] = useState(0);
 
   // Get window size safely (only runs on client)
   useEffect(() => {
     setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  }, []);
+
+  // Fake sales counter animation
+  useEffect(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count += Math.floor(Math.random() * 50) + 20; // Random increment
+      if (count >= 5000) {
+        count = 5000;
+        clearInterval(interval);
+      }
+      setSales(count);
+    }, 50); // speed of animation
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -51,10 +66,20 @@ export default function Home() {
           Grow Your Garden
         </motion.h1>
 
-        <p className="max-w-2xl text-gray-300 text-lg mb-10">
+        <p className="max-w-2xl text-gray-300 text-lg mb-6">
           Collect, trade, and grow playful pets & sheckles for your Roblox
           garden. A colorful adventure with endless fun!
         </p>
+
+        {/* Sales Counter */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-2xl font-bold text-teal-400 mb-10"
+        >
+          {sales >= 5000 ? "5000+ Sales" : `${sales} Sales`}
+        </motion.div>
 
         {/* Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">

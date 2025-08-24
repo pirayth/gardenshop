@@ -148,55 +148,53 @@ export default function CartPage() {
                   <div className="space-y-4">
                     {/* Stripe Checkout Button - Ready for integration */}
                     <div className="space-y-4 text-white">
-  <div className="space-y-6 text-white">
-  {/* Payment Info */}
-  <div className="space-y-2">
-    <h3 className="text-lg font-semibold">💳 Payment Information</h3>
-    <p>
-      <span className="font-medium">LTC Crypto Address:</span> 
-      <span className="ml-2 break-all text-pink-400">ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d</span>
-    </p>
-    <p>
-      <span className="font-medium">PayPal Email:</span> 
-      <span className="ml-2 text-pink-400">pirasalesonline@gmail.com</span>
-    </p>
-    <p>
-      <span className="font-medium">Order Form:</span> Please submit your order using the form below ONLY after completing payment.
-    </p>
-  </div>
+                      <div className="space-y-6 text-white">
+                        {/* Payment Info */}
+                        <div className="space-y-2">
+                          <h3 className="text-lg font-semibold">💳 Payment Information</h3>
+                          <p>
+                            <span className="font-medium">LTC Crypto Address:</span> 
+                            <span className="ml-2 break-all text-pink-400">ltc1q5czcd74d3e0fenj7mp8zs3d8ract478pz25c0d</span>
+                          </p>
+                          <p>
+                            <span className="font-medium">PayPal Email:</span> 
+                            <span className="ml-2 text-pink-400">pirasalesonline@gmail.com</span>
+                          </p>
+                          <p>
+                            <span className="font-medium">Order Form:</span> Please submit your order using the form below ONLY after completing payment.
+                          </p>
+                        </div>
 
-  {/* Submit Button */}
-  <Button
-    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg"
-    onClick={() => {
-      window.open(
-        "https://docs.google.com/forms/d/e/1FAIpQLSdXUPwM9kvrXpVO8W49jvoqlOfVfhCS6GnY6xspJjWn67xFsA/viewform",
-        "_blank"
-      )
-    }}
-  >
-    Submit Your Order 📝
-  </Button>
-</div>
+                        {/* Submit Button */}
+                        <Button
+                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg"
+                          onClick={() => {
+                            window.open(
+                              "https://docs.google.com/forms/d/e/1FAIpQLSdXUPwM9kvrXpVO8W49jvoqlOfVfhCS6GnY6xspJjWn67xFsA/viewform",
+                              "_blank"
+                            )
+                          }}
+                        >
+                          Submit Your Order 📝
+                        </Button>
+                      </div> {/* <-- Fixed missing closing div */}
 
-
-
-
-                    <div className="flex space-x-4">
-                      <Button
-                        variant="outline"
-                        onClick={clearCart}
-                        className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
-                      >
-                        Clear Cart
-                      </Button>
-                      <Button
-                        variant="outline"
-                        asChild
-                        className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
-                      >
-                        <a href="/">Continue Shopping</a>
-                      </Button>
+                      <div className="flex space-x-4">
+                        <Button
+                          variant="outline"
+                          onClick={clearCart}
+                          className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
+                        >
+                          Clear Cart
+                        </Button>
+                        <Button
+                          variant="outline"
+                          asChild
+                          className="flex-1 border-gray-600 hover:bg-gray-700 bg-transparent text-white"
+                        >
+                          <a href="/">Continue Shopping</a>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

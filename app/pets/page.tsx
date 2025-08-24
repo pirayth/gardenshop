@@ -52,16 +52,16 @@ export default function PetsPage() {
   }
 
   const pets = [
-    { name: "Ascended Pets", price: "15", originalPrice: "25", discount: 40, rating: 5.0, image: "https://s7.ezgif.com/tmp/ezgif-77674325f6b852.png", rarity: "Mythic" },
-    { name: "Raccoon", price: "10", originalPrice: "20", discount: 50, rating: 4.8, image: "https://s7.ezgif.com/tmp/ezgif-79597cb9fd42d9.png", rarity: "Epic" },
-    { name: "Disco Bee", price: "10", originalPrice: "18", discount: 44, rating: 4.7, image: "https://s7.ezgif.com/tmp/ezgif-7be3dd11a0e7f2.png", rarity: "Epic" },
-    { name: "Fennec Fox", price: "8.5", originalPrice: "17", discount: 50, rating: 4.6, image: "https://s7.ezgif.com/tmp/ezgif-70fff86382e746.png", rarity: "Rare" },
-    { name: "Spino", price: "7", originalPrice: "14", discount: 50, rating: 4.5, image: "https://s7.ezgif.com/tmp/ezgif-7cd3f45e68b8d3.png", rarity: "Rare" },
+    { name: "Ascended Pets", price: "15", originalPrice: "25", discount: 40, rating: 5.0, image: "https://s2.ezgif.com/tmp/ezgif-2a182d723f4e6f.png", rarity: "Mythic" },
+    { name: "Raccoon", price: "10", originalPrice: "20", discount: 50, rating: 4.8, image: "https://s2.ezgif.com/tmp/ezgif-2a182d723f4e6f.png", rarity: "Epic" },
+    { name: "Disco Bee", price: "10", originalPrice: "18", discount: 44, rating: 4.7, image: "https://s2.ezgif.com/tmp/ezgif-296960daba605d.png", rarity: "Epic" },
+    { name: "Fennec Fox", price: "8.5", originalPrice: "17", discount: 50, rating: 4.6, image: "https://s2.ezgif.com/tmp/ezgif-2407dda9a4c8d4.png", rarity: "Rare" },
+    { name: "Spino", price: "7", originalPrice: "14", discount: 50, rating: 4.5, image: "https://s2.ezgif.com/tmp/ezgif-2d95e54d8c489c.png", rarity: "Rare" },
     { name: "Butterfly", price: "7", originalPrice: "12", discount: 42, rating: 4.4, image: "https://s7.ezgif.com/tmp/ezgif-7ea0288714ebff.png", rarity: "Rare" },
     { name: "Dragonfly", price: "6", originalPrice: "10", discount: 40, rating: 4.3, image: "https://s7.ezgif.com/tmp/ezgif-786b6c1057c480.png", rarity: "Common" },
     { name: "T-Rex", price: "5", originalPrice: "12", discount: 58, rating: 4.2, image: "https://s7.ezgif.com/tmp/ezgif-76304616b4488c.png", rarity: "Common" },
     { name: "Mimic", price: "5", originalPrice: "8", discount: 38, rating: 4.1, image: "https://s7.ezgif.com/tmp/ezgif-7a640e7e95b3c0.png", rarity: "Common" },
-    { name: "Chicken Zombie", price: "5", originalPrice: "9", discount: 44, rating: 3.9, image: "https://s7.ezgif.com/tmp/ezgif-7fd9ea0a2004db.png", rarity: "Common" },
+    { name: "Chicken Zombie", price: "5", originalPrice: "9", discount: 44, rating: 3.9, image: "https://s2.ezgif.com/tmp/ezgif-2f5d4f7b671652.png", rarity: "Common" },
     { name: "Corrupt Kitsune", price: "4", originalPrice: "15", discount: 73, rating: 3.8, image: "https://s7.ezgif.com/tmp/ezgif-765c5b1d3e7d13.png", rarity: "Common" },
     { name: "French Fry Ferret", price: "3", originalPrice: "6", discount: 50, rating: 4.0, image: "https://s7.ezgif.com/tmp/ezgif-71f8e7029e711f.png", rarity: "Common" },
     { name: "Lobster", price: "3", originalPrice: "6", discount: 50, rating: 4.0, image: "https://s7.ezgif.com/tmp/ezgif-76da8bc98507c0.png", rarity: "Common" },

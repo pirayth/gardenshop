@@ -1,54 +1,150 @@
-"use client"; // <- This is required for Framer Motion
+"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+interface Review {
+  text: string;
+  stars: number;
+  x: number;
+  y: number;
+}
+
 export default function Home() {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const [sales, setSales] = useState(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
-  // Get window size safely (only runs on client)
+  // Large pool of human-like reviews
+  const fakeTexts = [
+    "Super smooth experience, pets came exactly as promised!",
+    "Got my pets so fast, thank youuu!",
+    "Had a little delay but customer support was great.",
+    "Honestly the best Roblox garden shop I’ve tried.",
+    "My garden looks so much better now, so happy!",
+    "Fast delivery, and the prices are really good.",
+    "LOVE the pets I bought!! Definitely coming back.",
+    "Totally worth it, I didn’t expect it to be this easy.",
+    "Everything arrived as expected, super quick too!",
+    "Great prices and very reliable, 10/10.",
+    "My garden is filling up fast, can’t stop collecting!",
+    "Secure and fast, exactly what I was looking for.",
+    "Highly recommend if you want pets without hassle.",
+    "So impressed with how fast everything came through!",
+    "Legit service, got my sheckles and pets right away.",
+    "Really happy with my order, no issues at all.",
+    "Website was easy to use and pets came super fast!",
+    "Will definitely tell my friends about this shop.",
+    "Excellent service, thank you for making it so easy.",
+    "This shop never disappoints, always on time.",
+    "Affordable and reliable, what more could you ask for?",
+    "Didn’t expect it to be this fast, blown away.",
+    "Love how everything worked without stress.",
+    "Quick, simple, and trustworthy.",
+    "Support team was helpful and friendly.",
+    "Absolutely legit, 5 stars for sure.",
+    "If you’re thinking about it, just do it.",
+    "So far the best experience I’ve had online.",
+    "Couldn’t be happier, thanks guys!",
+    "Got my pets and sheckles in minutes, wow!",
+    "Best shop for Roblox pets hands down.",
+    "Always reliable, thank you so much.",
+    "Prices are fair and delivery is lightning fast.",
+    "Everything worked as advertised.",
+    "Love this site, will keep coming back.",
+    "Such a good experience every time.",
+    "Shop is 100% legit, highly recommend.",
+    "Perfect every time, never had an issue.",
+  ];
+
+  // Update window size
   useEffect(() => {
     setWindowSize({ width: window.innerWidth, height: window.innerHeight });
   }, []);
 
-  // Fake sales counter animation
+  // Generate random reviews with positions spread evenly
+  const generateReviews = () => {
+    const selectedTexts = [...fakeTexts].sort(() => Math.random() - 0.5).slice(0, 10);
+    const reviewsArray: Review[] = [];
+
+    const minX = 50; // padding from left
+    const maxX = windowSize.width - 250; // avoid cutting off
+    const minY = 50; // padding from top
+    const maxY = windowSize.height - 200; // avoid cutting off
+
+    selectedTexts.forEach((text, index) => {
+      const x = minX + ((maxX - minX) / 10) * index + Math.random() * 40; // spread horizontally
+      const y = minY + Math.random() * (maxY - minY);
+      reviewsArray.push({
+        text,
+        stars: 4 + Math.round(Math.random()), // 4 or 5 stars
+        x,
+        y,
+      });
+    });
+
+    return reviewsArray;
+  };
+
+  // Initialize reviews once positions are known
+  useEffect(() => {
+    if (windowSize.width > 0) {
+      setReviews(generateReviews());
+    }
+  }, [windowSize]);
+
+  // Refresh reviews every 30 seconds
+  useEffect(() => {
+    if (windowSize.width > 0) {
+      const interval = setInterval(() => {
+        setReviews(generateReviews());
+      }, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [windowSize]);
+
+  // Fake sales counter
   useEffect(() => {
     let count = 0;
     const interval = setInterval(() => {
-      count += Math.floor(Math.random() * 50) + 20; // Random increment
+      count += Math.floor(Math.random() * 50) + 20;
       if (count >= 5000) {
         count = 5000;
         clearInterval(interval);
       }
       setSales(count);
-    }, 50); // speed of animation
+    }, 50);
     return () => clearInterval(interval);
   }, []);
 
+  const isMobile = windowSize.width <= 768;
+
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white overflow-hidden">
-      {/* Floating Shapes */}
-      {[...Array(10)].map((_, i) => (
+      {/* Floating Reviews */}
+      {reviews.slice(0, isMobile ? 4 : 8).map((review, i) => (
         <motion.div
           key={i}
-          className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 opacity-50 blur-sm"
-          initial={{
-            x: Math.random() * windowSize.width,
-            y: Math.random() * windowSize.height,
-          }}
+          className="absolute bg-gray-800 bg-opacity-80 backdrop-blur-sm p-3 rounded-xl shadow-lg max-w-xs text-left"
+          style={{ left: review.x, top: review.y }}
+          initial={{ opacity: 0 }}
           animate={{
-            y: ["-5%", "105%"],
-            x: `+=${Math.random() * 60 - 30}`,
-            rotate: [0, 360],
+            y: [review.y, review.y + 150, review.y],
+            x: [review.x, review.x + (Math.random() * 30 - 15), review.x],
+            opacity: [0.8, 1, 0.8],
           }}
           transition={{
-            duration: 30 + Math.random() * 20,
+            duration: 20 + Math.random() * 10,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
           }}
-        />
+        >
+          <p className="text-sm text-gray-200 mb-1">&quot;{review.text}&quot;</p>
+          <div className="text-yellow-400 text-xs">
+            {Array.from({ length: 5 }, (_, idx) => (idx < review.stars ? "★" : "☆")).join("")}
+          </div>
+        </motion.div>
       ))}
 
       {/* Hero Section */}
@@ -71,7 +167,6 @@ export default function Home() {
           garden. A colorful adventure with endless fun!
         </p>
 
-        {/* Sales Counter */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

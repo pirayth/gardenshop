@@ -16,8 +16,8 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Roblox Garden Shop - Grow Your Virtual Garden!",
-  description: "Browse and purchase virtual gardening items, seeds, tools, and decorations for your Roblox garden",
+  title: "Cheap Gag Shop - We Have Everything!",
+  description: "Visit the website and see previous reviews on the homepage. WERE LEGIT!!",
   generator: "v0.app",
 }
 

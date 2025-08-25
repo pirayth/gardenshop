@@ -51,7 +51,18 @@ export default function PetsPage() {
     setTimeout(() => setShowPopup(false), 3000)
   }
 
+  const griffinSpecial = {
+    name: "Griffin",
+    price: "3.5",
+    originalPrice: "8",
+    discount: Math.round(((8 - 3.5) / 8) * 100),
+    image: "/griffin.png",
+    rarity: "Mythic",
+    saleEnd: new Date(Date.now() + 48 * 60 * 60 * 1000)
+  }
+
   const pets = [
+    griffinSpecial,
     { name: "Ascended Pets", price: "15", originalPrice: "25", discount: 40, image: "/ascended.png", rarity: "Mythic" },
     { name: "Raccoon", price: "10", originalPrice: "20", discount: 50, image: "/raccoon.png", rarity: "Epic" },
     { name: "Disco Bee", price: "10", originalPrice: "18", discount: 44, image: "/disco.png", rarity: "Epic" },
@@ -68,7 +79,6 @@ export default function PetsPage() {
     { name: "Golden Goose", price: "4", originalPrice: "7.5", discount: 47, image: "/goose.png", rarity: "Rare" },
   ]
 
-  // 🔎 Search + Sort logic
   const filteredPets = useMemo(() => {
     let result = pets.filter((pet) =>
       pet.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -113,7 +123,6 @@ export default function PetsPage() {
             </Button>
           </div>
 
-          {/* 🔹 Active tab + quick switch to Sheckles */}
           <div className="flex space-x-4 mt-4">
             <span className="bg-yellow-400 text-black px-4 py-2 rounded-lg font-semibold shadow">
               Pets
@@ -128,7 +137,6 @@ export default function PetsPage() {
         </div>
       </header>
 
-      {/* 🔎 Search + Sort Controls */}
       <section className="container mx-auto px-4 mt-8 flex flex-col md:flex-row gap-4 justify-between items-center">
         <input
           type="text"
@@ -148,27 +156,35 @@ export default function PetsPage() {
         </select>
       </section>
 
-      {/* Pet Grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredPets.map((pet, idx) => (
               <Card
                 key={idx}
-                className="bg-slate-800/50 border-slate-700/50 hover:border-pink-500/30 transition-all duration-300 group cursor-pointer"
+                className={`relative bg-slate-800/50 border-slate-700/50 transition-all duration-300 group cursor-pointer ${
+                  pet.name === "Griffin"
+                    ? "border-4 border-yellow-400 shadow-[0_0_30px_rgba(255,223,0,0.8)] animate-pulse"
+                    : "hover:border-pink-500/30"
+                }`}
               >
-                <CardContent className="p-0">
+                <CardContent className="p-2">
                   <div className="relative">
                     <div className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
                       Save {pet.discount}%
                     </div>
+                    {pet.name === "Griffin" && (
+                      <div className="absolute top-2 right-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full z-10 animate-pulse">
+                        🔥 Limited 48h Sale!
+                      </div>
+                    )}
                     <img
                       src={pet.image || `https://via.placeholder.com/600x400?text=${encodeURIComponent(pet.name)}`}
                       alt={pet.name}
-                      className="w-full h-64 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-contain rounded-t-lg group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-4">
+                  <div className="p-2">
                     <h3 className="font-bold text-white mb-2 group-hover:text-pink-400 transition-colors font-sans text-lg">
                       {pet.name}
                     </h3>

@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 interface Review {
   id: number;
   text: string;
-  stars: number;
   x: number;
   y: number;
 }
@@ -76,7 +75,6 @@ export default function Home() {
     return texts.map((text, index) => ({
       id: Date.now() + index,
       text,
-      stars: 4 + Math.round(Math.random()),
       x: Math.random() * (windowSize.width - safePadding * 2) + safePadding,
       y: Math.random() * (windowSize.height - safePadding * 2) + safePadding,
     }));
@@ -86,7 +84,7 @@ export default function Home() {
     setReviews(generateReviews());
     const interval = setInterval(() => {
       setReviews(generateReviews());
-    }, 10000);
+    }, 15000); // refresh every 15 seconds
     return () => clearInterval(interval);
   }, [windowSize]);
 
@@ -126,16 +124,11 @@ export default function Home() {
             style={{ position: "absolute" }}
           >
             <p className="text-sm text-gray-200 mb-1">&quot;{review.text}&quot;</p>
-            <div className="text-yellow-400 text-xs">
-              {Array.from({ length: 5 }, (_, idx) =>
-                idx < review.stars ? "★" : "☆"
-              ).join("")}
-            </div>
+            <div className="text-yellow-400 text-xs">★★★★★</div>
           </motion.div>
         ))}
       </AnimatePresence>
 
-      {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center h-screen px-6 relative z-10">
         <span className="text-xs font-semibold tracking-wide border border-violet-500 px-3 py-1 rounded-full text-violet-300 mb-4 shadow-md">
           🌸 New Pet Garden Collection
@@ -164,7 +157,6 @@ export default function Home() {
           {sales >= 5000 ? "5000+ Sales" : `${sales} Sales`}
         </motion.div>
 
-        {/* Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Link href="/pets" passHref legacyBehavior>
             <a aria-label="Shop Pets">

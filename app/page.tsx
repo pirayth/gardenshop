@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface Review {
+  id: number;
   text: string;
   stars: number;
   x: number;
@@ -16,95 +17,79 @@ export default function Home() {
   const [sales, setSales] = useState(0);
   const [reviews, setReviews] = useState<Review[]>([]);
 
-  // Large pool of human-like reviews
   const fakeTexts = [
-    "Super smooth experience, pets came exactly as promised!",
-    "Got my pets so fast, thank youuu!",
-    "Had a little delay but customer support was great.",
-    "Honestly the best Roblox garden shop I’ve tried.",
-    "My garden looks so much better now, so happy!",
-    "Fast delivery, and the prices are really good.",
-    "LOVE the pets I bought!! Definitely coming back.",
-    "Totally worth it, I didn’t expect it to be this easy.",
-    "Everything arrived as expected, super quick too!",
-    "Great prices and very reliable, 10/10.",
-    "My garden is filling up fast, can’t stop collecting!",
-    "Secure and fast, exactly what I was looking for.",
-    "Highly recommend if you want pets without hassle.",
-    "So impressed with how fast everything came through!",
-    "Legit service, got my sheckles and pets right away.",
-    "Really happy with my order, no issues at all.",
-    "Website was easy to use and pets came super fast!",
-    "Will definitely tell my friends about this shop.",
-    "Excellent service, thank you for making it so easy.",
-    "This shop never disappoints, always on time.",
-    "Affordable and reliable, what more could you ask for?",
-    "Didn’t expect it to be this fast, blown away.",
-    "Love how everything worked without stress.",
-    "Quick, simple, and trustworthy.",
-    "Support team was helpful and friendly.",
-    "Absolutely legit, 5 stars for sure.",
-    "If you’re thinking about it, just do it.",
-    "So far the best experience I’ve had online.",
-    "Couldn’t be happier, thanks guys!",
-    "Got my pets and sheckles in minutes, wow!",
-    "Best shop for Roblox pets hands down.",
-    "Always reliable, thank you so much.",
-    "Prices are fair and delivery is lightning fast.",
-    "Everything worked as advertised.",
-    "Love this site, will keep coming back.",
-    "Such a good experience every time.",
-    "Shop is 100% legit, highly recommend.",
-    "Perfect every time, never had an issue.",
+    "so happy with my pets, i got everything i ordered",
+    "my garden is looking so nicee TYSMM",
+    "arrived late but they got the pets",
+    "best roblox garden shop, totally recommend",
+    "amazing delivery, my garden looks awesome",
+    "delivery was fast, but website was a bit difficult to move around",
+    "I LOVEE THE PETS I BOUGHT",
+    "easy sheckles!! prices are so cheap and LEGITTT",
+    "super quick delivery, got all my pets",
+    "really happy with my sheckles purchase",
+    "my garden is filling up fast",
+    "prices are fair and pets are great",
+    "recommend to anyone who loves gag",
+    "happy with how fast everything arrived",
+    "LEGITT bought some sheckles",
+    "totally impressed with my order",
+    "website worked well and pets came fast",
+    "my garden looks amazing thanks to this shop",
+    "best deal ever!!",
+    "trustworthy shop 100%",
+    "fast response from support",
+    "smooth experience overall",
+    "definitely buying again",
+    "best value for money",
+    "pets are so cute omg",
+    "LEGITT NO SCAM",
+    "10/10 experience",
+    "better than expected",
+    "super satisfied",
+    "wish i found this earlier!",
+    "fastest delivery ever",
+    "amazing deals",
+    "everything works perfectly",
+    "crazy good prices",
+    "this sites legit",
+    "great shop, no scam",
+    "buying more soon",
+    "top-tier service",
+    "so easy to navigate",
+    "bought a raccoon",
   ];
 
-  // Update window size
   useEffect(() => {
-    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    const updateSize = () =>
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // Generate random reviews with positions spread evenly
   const generateReviews = () => {
-    const selectedTexts = [...fakeTexts].sort(() => Math.random() - 0.5).slice(0, 10);
-    const reviewsArray: Review[] = [];
+    const count = windowSize.width <= 768 ? 2 : 5;
+    const safePadding = 100;
+    const texts = [...fakeTexts].sort(() => Math.random() - 0.5).slice(0, count);
 
-    const minX = 50; // padding from left
-    const maxX = windowSize.width - 250; // avoid cutting off
-    const minY = 50; // padding from top
-    const maxY = windowSize.height - 200; // avoid cutting off
-
-    selectedTexts.forEach((text, index) => {
-      const x = minX + ((maxX - minX) / 10) * index + Math.random() * 40; // spread horizontally
-      const y = minY + Math.random() * (maxY - minY);
-      reviewsArray.push({
-        text,
-        stars: 4 + Math.round(Math.random()), // 4 or 5 stars
-        x,
-        y,
-      });
-    });
-
-    return reviewsArray;
+    return texts.map((text, index) => ({
+      id: Date.now() + index,
+      text,
+      stars: 4 + Math.round(Math.random()),
+      x: Math.random() * (windowSize.width - safePadding * 2) + safePadding,
+      y: Math.random() * (windowSize.height - safePadding * 2) + safePadding,
+    }));
   };
 
-  // Initialize reviews once positions are known
   useEffect(() => {
-    if (windowSize.width > 0) {
+    setReviews(generateReviews());
+    const interval = setInterval(() => {
       setReviews(generateReviews());
-    }
+    }, 10000);
+    return () => clearInterval(interval);
   }, [windowSize]);
 
-  // Refresh reviews every 30 seconds
-  useEffect(() => {
-    if (windowSize.width > 0) {
-      const interval = setInterval(() => {
-        setReviews(generateReviews());
-      }, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [windowSize]);
-
-  // Fake sales counter
   useEffect(() => {
     let count = 0;
     const interval = setInterval(() => {
@@ -118,34 +103,37 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const isMobile = windowSize.width <= 768;
-
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white overflow-hidden">
-      {/* Floating Reviews */}
-      {reviews.slice(0, isMobile ? 4 : 8).map((review, i) => (
-        <motion.div
-          key={i}
-          className="absolute bg-gray-800 bg-opacity-80 backdrop-blur-sm p-3 rounded-xl shadow-lg max-w-xs text-left"
-          style={{ left: review.x, top: review.y }}
-          initial={{ opacity: 0 }}
-          animate={{
-            y: [review.y, review.y + 150, review.y],
-            x: [review.x, review.x + (Math.random() * 30 - 15), review.x],
-            opacity: [0.8, 1, 0.8],
-          }}
-          transition={{
-            duration: 20 + Math.random() * 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <p className="text-sm text-gray-200 mb-1">&quot;{review.text}&quot;</p>
-          <div className="text-yellow-400 text-xs">
-            {Array.from({ length: 5 }, (_, idx) => (idx < review.stars ? "★" : "☆")).join("")}
-          </div>
-        </motion.div>
-      ))}
+      <AnimatePresence>
+        {reviews.map((review) => (
+          <motion.div
+            key={review.id}
+            className="absolute bg-gray-800 bg-opacity-80 backdrop-blur-sm p-3 rounded-xl shadow-lg max-w-xs text-left"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              x: [review.x, review.x + (Math.random() * 40 - 20), review.x],
+              y: [review.y, review.y + 50, review.y],
+              rotate: [0, 5, -5, 0],
+            }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 15 + Math.random() * 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{ position: "absolute" }}
+          >
+            <p className="text-sm text-gray-200 mb-1">&quot;{review.text}&quot;</p>
+            <div className="text-yellow-400 text-xs">
+              {Array.from({ length: 5 }, (_, idx) =>
+                idx < review.stars ? "★" : "☆"
+              ).join("")}
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center h-screen px-6 relative z-10">
@@ -206,7 +194,6 @@ export default function Home() {
             </a>
           </Link>
 
-          {/* Support Button */}
           <motion.button
             whileHover={{
               scale: 1.05,
@@ -224,7 +211,6 @@ export default function Home() {
           </motion.button>
         </div>
 
-        {/* Feature Badges */}
         <div className="flex gap-6 text-sm text-gray-400 flex-wrap justify-center">
           <span>⚡ Instant Delivery</span>
           <span>🔒 Secure Payments</span>

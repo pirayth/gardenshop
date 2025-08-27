@@ -36,15 +36,17 @@ export default function ShecklesPage() {
     return () => window.removeEventListener("storage", updateCartCount)
   }, [])
 
-  const shecklePackages = [
-    { amount: "13Sx Sheckles", price: "$2.00", discount: "20%" },
-    { amount: "33Sx Sheckles", price: "$5.00", discount: "33%" },
-    { amount: "67Sx Sheckles", price: "$10.00", discount: "43%" },
-    { amount: "133Sx Sheckles", price: "$20.00", discount: "50%" },
-    { amount: "333Sx Sheckles", price: "$50.00", discount: "55%" },
-    { amount: "667Sx Sheckles", price: "$100.00", discount: "60%" },
-    { amount: "1.3SP Sheckles", price: "$200.00", discount: "67%" },
-  ]
+ const shecklePackages = [
+  { amount: "25Sx Sheckles", price: "$1", discount: "0%" },
+  { amount: "55Sx Sheckles", price: "$2", discount: "10%" },
+  { amount: "150Sx Sheckles", price: "$5", discount: "15%" },
+  { amount: "325Sx Sheckles", price: "$10", discount: "20%" },
+  { amount: "700Sx Sheckles", price: "$20", discount: "30%" },
+  { amount: "1,000Sx Sheckles (1SP)", price: "$25", discount: "35%" },
+  { amount: "2,500Sx Sheckles (2.5SP)", price: "$50", discount: "45%" },
+]
+
+
 
   const addToCart = (pack: { amount: string; price: string }) => {
     const savedCart = localStorage.getItem("roblox-garden-cart")
